@@ -1,0 +1,101 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
+<%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
+
+<f:view>
+<html>
+<head>
+    <title>Recipient Dashboard</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* NAVBAR STYLING */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #003366;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #ffcc00;
+        }
+
+        .content {
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .search-container {
+            margin-top: 40px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #003366;
+            font-size: 16px;
+            outline: none;
+            border-radius: 0px;
+        }
+
+        .search-container input[type="submit"] {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 0px;
+            transition: background-color 0.3s;
+        }
+
+        .search-container input[type="submit"]:hover {
+            background-color: #002244;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h:link outcome="dashboard" value="Dashboard" styleClass="nav-link"/>
+        <h:link outcome="SearchRecipient" value="Search" styleClass="nav-link"/>
+        <h:link outcome="ShowRecipient" value="Show" styleClass="nav-link"/>
+        <h:link outcome="UpdateRecipient" value="Update" styleClass="nav-link"/>
+    </div>
+
+    <div class="content">
+        <h2>Welcome to Recipient Dashboard</h2>
+        <p>Use the navbar above to Search, Show, or Update Recipients.</p>
+
+        <div class="search-container">
+            <h:form>
+                <h:inputText value="#{recipientController.searchValue}" 
+                             style="padding:10px;width:300px;border:2px solid #003366;font-size:16px;outline:none;border-radius:0px;"
+                             required="true" 
+                             requiredMessage="Please enter a value." 
+                             title="Enter search value..." />
+                <h:commandButton value="Search" 
+                                 action="#{recipientController.searchRecipient}" 
+                                 style="background-color: #003366; color: white; border: none; padding: 10px 20px; font-size: 16px; margin-left: 10px; cursor: pointer; border-radius: 0px; transition: background-color 0.3s;" />
+            </h:form>
+        </div>
+    </div>
+</body>
+</html>
+</f:view>

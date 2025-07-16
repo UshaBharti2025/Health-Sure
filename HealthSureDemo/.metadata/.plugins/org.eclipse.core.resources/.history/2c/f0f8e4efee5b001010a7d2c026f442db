@@ -1,0 +1,95 @@
+ <%@page contentType="text/html"%>
+<%@page pageEncoding="UTF-8"%>
+<html>
+<head>
+    <title>Recipient Dashboard</title>
+    <style>
+        body {
+            background-color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* NAVBAR STYLING */
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #003366; /* Dark blue */
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .navbar a {
+            color: white;
+            margin: 0 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        
+        
+        
+        .navbar a:hover {
+            color: #ffcc00;
+        }
+
+        /* MAIN CONTENT CENTERED */
+        .content {
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        /* SEARCH BOX CENTERED */
+        .search-container {
+            margin-top: 40px;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            width: 300px;
+            border: 2px solid #003366;
+            font-size: 16px;
+            outline: none;
+            border-radius: 0px; /* Sharp edges */
+        }
+
+        .search-container input[type="submit"] {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 0px; /* Sharp edges */
+            transition: background-color 0.3s;
+        }
+
+        .search-container input[type="submit"]:hover {
+            background-color: #002244;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="dashboardDemo.jsp">Dashboard</a>
+        <a href="SearchRecipientDemo.jsp">Search</a>
+        <a href="ShowRecipientDemo.jsp">Show</a>
+        <a href="UpdateRecipientDemo.jsp">Update</a>
+    </div>
+
+    <div class="content">
+        <h2>Welcome to Recipient Dashboard</h2>
+        <p>Use the navbar above to Search, Show, or Update Recipients.</p>
+
+        <div class="search-container">
+            <form action="SearchRecipientDemo.jsp" method="get">
+                <input type="text" name="searchValue" placeholder="Enter search value..." required />
+                <input type="submit" value="Search" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

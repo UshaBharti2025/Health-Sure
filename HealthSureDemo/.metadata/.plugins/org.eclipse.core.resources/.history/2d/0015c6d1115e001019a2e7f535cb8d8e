@@ -1,0 +1,128 @@
+package com.java.jsf.recipient.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.java.jsf.recipient.model.Recipient;
+import com.java.jsf.recipient.util.SessionHelper;
+
+public class RecipientDaoImpl implements RecipientDao {
+	
+	SessionFactory sf;
+	Session session;
+	
+//	static {
+//		sessionFactory = SessionHelper.getConnection();
+//		Session session =sessionFactory.openSession();
+//	}
+
+	@Override
+    public Recipient searchByHid(String hId) {
+        sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+        Query query = session.getNamedQuery("searchByHid");
+        query.setParameter("hId", hId);
+        Recipient recipient = (Recipient)  query.uniqueResult();
+        
+        if (recipient == null) {
+            System.out.println("No recipient found for hId: " + hId);
+        }
+        
+        return recipient;
+        
+    }
+
+	@Override
+	public List<Recipient> searchByFirstName(String firstName) {
+	    if (firstName == null || firstName.trim().isEmpty()) {
+            System.out.println("No recipient found for firstName: " + firstNmae);
+
+//	        return new ArrayList<>();
+	    }
+
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    Query query = session.getNamedQuery("searchByFirstName");
+	    query.setParameter("firstName", "%" + firstName + "%");
+	    return query.list();
+	}
+
+	@Override
+	public List<Recipient> searchByMobile(String mobile) {
+	    if (mobile == null || mobile.trim().isEmpty()) {
+	        return new ArrayList<>();
+	    }
+
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    Query query = session.getNamedQuery("searchByMobile");
+	    query.setParameter("mobile", "%" + mobile + "%");
+	    return query.list();
+	}
+
+
+    @Override
+    public List<Recipient> searchByCreatedAt(String createdAt) {
+    	sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+        Query query = session.getNamedQuery("searchByCreatedAt");
+        query.setParameter("createdAt", "%" + createdAt + "%");
+        return query.list();
+    }
+
+    @Override
+    public List<Recipient> showAllRecipients() {
+    	sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+        Query query = session.getNamedQuery("showAllRecipients");
+        List<Recipient> recipientList = query.list();
+        return recipientList;
+//        return list != null ? list : new ArrayList<>(); 
+        
+    }
+
+    @Override
+    public String updateRecipient(Recipient recipient) {
+        boolean isValid = true;
+        FacesContext context = FacesContext.getCurrentInstance();
+
+        if (recipient.getFirstName() == null || recipient.getFirstName().trim().length() < 2) {
+            context.addMessage("firstName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Invalid First Name", "First name must be at least 2 characters."));
+            isValid = false;
+        }
+
+        if (recipient.getMobile() == null || !recipient.getMobile().matches("\\d{10}")) {
+            context.addMessage("mobile", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Invalid Mobile", "Mobile number must be 10 digits."));
+            isValid = false;
+        }
+
+        if (!isValid) {
+            context.validationFailed();
+            return null;
+        }
+
+        sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+        Transaction transaction = session.beginTransaction();
+        session.update(recipient);
+        transaction.commit();
+
+        Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
+        sessionMap.put("updatedRecipient", recipient);
+
+        return "UpdateSuccess.jsp?faces-redirect=true";
+    }
+
+}

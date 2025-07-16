@@ -1,0 +1,97 @@
+package com.java.jsf.recipient.test;
+
+import java.util.List;
+
+import com.java.jsf.recipient.controller.RecipientController;
+import com.java.jsf.recipient.dao.RecipientDao;
+import com.java.jsf.recipient.dao.RecipientDaoImpl;
+import com.java.jsf.recipient.model.Gender;
+import com.java.jsf.recipient.model.Recipient;
+import com.java.jsf.recipient.model.Status;
+
+public class RecipientTest {
+
+    public static void main(String[] args) {
+    	
+    	
+    	
+    	public class RecipientTest {
+    	    public static void main(String[] args) {
+    	        RecipientDao dao = new RecipientDaoImpl();
+    	        List<Recipient> list = dao.showAllRecipients();
+    	        System.out.println("✅ Fetched " + list.size() + " recipients from DB.");
+    	    }
+    	}
+
+//        // Test 1: MODEL
+//        testRecipientModel();
+//
+//        // Test 2: DAO
+//        testRecipientDao();
+//
+//        // Test 3: CONTROLLER
+//        testRecipientController();
+//    }
+//
+//    // ---------------- Test 1: Recipient Model -----------------
+//    private static void testRecipientModel() {
+//        System.out.println("====== Testing Recipient MODEL class ======");
+//
+//        Recipient rec = new Recipient();
+//        rec.sethId("R001");
+//        rec.setFirstName("Usha");
+//        rec.setLastName("Sharma");
+//        rec.setMobile("9876543210");
+//        rec.setEmail("usha@example.com");
+//        rec.setGender(Gender.FEMALE);
+//        rec.setStatus(Status.ACTIVE);
+//
+//        System.out.println("Health ID: " + rec.gethId());
+//        System.out.println("Full Name: " + rec.getFirstName() + " " + rec.getLastName());
+//        System.out.println("Mobile: " + rec.getMobile());
+//        System.out.println("Email: " + rec.getEmail());
+//        System.out.println("Gender: " + rec.getGender());
+//        System.out.println("Status: " + rec.getStatus());
+//        System.out.println("✅ Model test complete.\n");
+//    }
+//
+//    // ---------------- Test 2: DAO Impl -----------------
+//    private static void testRecipientDao() {
+//        System.out.println("====== Testing Recipient DAO ======");
+//
+//        RecipientDao dao = new RecipientDaoImpl();
+//
+//        System.out.println("👉 Fetching all recipients from DB:");
+//        List<Recipient> list = dao.showAllRecipients();
+//
+//        if (list == null || list.isEmpty()) {
+//            System.out.println("❌ No recipients found in the database.");
+//        } else {
+//            System.out.println("✅ Found " + list.size() + " recipients:");
+//            for (Recipient r : list) {
+//                System.out.println(" - " + r.gethId() + ": " + r.getFirstName() + " " + r.getLastName());
+//            }
+//        }
+//        System.out.println("✅ DAO test complete.\n");
+//    }
+//
+//    // ---------------- Test 3: CONTROLLER -----------------
+//    private static void testRecipientController() {
+//        System.out.println("====== Testing Recipient CONTROLLER ======");
+//
+//        RecipientController controller = new RecipientController();
+//        controller.setRecipientDao(new RecipientDaoImpl()); // inject manually
+//
+//        List<Recipient> list = controller.showRecipient();
+//        if (list == null || list.isEmpty()) {
+//            System.out.println("❌ Controller returned empty recipient list.");
+//        } else {
+//            System.out.println("✅ Controller returned " + list.size() + " recipients:");
+//            for (Recipient r : list) {
+//                System.out.println(" * " + r.gethId() + ": " + r.getFirstName() + " " + r.getLastName());
+//            }
+//        }
+//
+//        System.out.println("✅ Controller test complete.");
+    }
+}

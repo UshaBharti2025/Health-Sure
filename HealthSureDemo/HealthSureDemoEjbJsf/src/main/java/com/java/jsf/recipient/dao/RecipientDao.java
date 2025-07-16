@@ -1,0 +1,36 @@
+package com.java.jsf.recipient.dao;
+
+import java.util.List;
+import com.java.jsf.recipient.model.Recipient;
+
+public interface RecipientDao {
+
+    //----Search by health ID (exact match)----
+    Recipient searchByHid(String hId);
+
+    // Search by mobile (LIKE %mobile%)
+    List<Recipient> searchByMobile(String mobile);
+
+    // Search by createdAt date (LIKE %createdAt%)
+    List<Recipient> searchByCreatedAt(String createdAt);
+
+    // Show all recipients
+    List<Recipient> showAllRecipients();
+
+    // Update recipient
+    String updateRecipient(Recipient recipient);
+
+    /* ---------- NEW name‑based search methods ---------- */
+
+    /**
+     * Returns recipients whose first name starts with the supplied prefix
+     * (case insensitive, SQL LIKE 'prefix%').
+     */
+    List<Recipient> searchByFirstNameStartsWith(String firstNamePrefix);
+
+    /**
+     * Returns recipients whose first name contains the supplied text anywhere
+     * (case insensitive, SQL LIKE '%text%').
+     */
+    List<Recipient> searchByFirstNameContains(String firstNameFragment);
+}

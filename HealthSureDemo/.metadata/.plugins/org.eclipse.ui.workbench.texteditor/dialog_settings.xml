@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="false"/>
+		<list key="findhistory">
+			<item value="updateRecipient()"/>
+			<item value="prepareUpdate()"/>
+			<item value="RecipientController()"/>
+			<item value="RecipientController"/>
+			<item value="styleClassForPage"/>
+			<item value="styleClassForPage(int pageIndex)"/>
+			<item value="goTo"/>
+			<item value="getPageIndexes()"/>
+			<item value="getPage"/>
+			<item value="getPageNumber()"/>
+			<item value="getPageNumberMap()"/>
+			<item value="getPageNumberMap("/>
+			<item value="getPaginatedList"/>
+			<item value="getShow"/>
+			<item value="sortBy"/>
+		</list>
+	</section>
+</section>

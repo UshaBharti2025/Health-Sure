@@ -1,0 +1,19 @@
+package com.java.jsf.recipient.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import com.java.jsf.recipient.model.Recipient;
+
+public interface RecipientDao {
+	
+	
+	 Recipient searchByHid(String hId);
+	    List<Recipient> searchByFirstName(String firstName);
+	    List<Recipient> searchByMobile(String mobile);
+	    List<Recipient> searchByCreatedAt(String createdAt);
+	    String updateRecipient(Recipient recipient);
+		List<Recipient> showAllRecipients();
+	
+}
+
