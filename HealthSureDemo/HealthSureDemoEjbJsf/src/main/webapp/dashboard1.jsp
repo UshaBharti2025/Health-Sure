@@ -65,7 +65,8 @@
             <h:commandLink value="Search" action="SearchRecipient1" styleClass="nav-link" />
         </h:form>
         <h:form style="display:inline;">
-            <h:commandLink value="Show" action="ShowRecipient1" styleClass="nav-link" />
+            <h:commandLink value="Show" action="#{recipientController.goToShowPage}"
+ styleClass="nav-link" />
         </h:form>
         <h:form style="display:inline;">
             <h:commandLink value="Update" action="UpdateRecipient1" styleClass="nav-link" />

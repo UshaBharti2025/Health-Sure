@@ -4,21 +4,21 @@
 	<section name="java.lang.Class">
 		<item key="replaceBarOpen" value="false"/>
 		<list key="findhistory">
+			<item value=" getRecipie"/>
+			<item value=" getRecipientByHid"/>
+			<item value="search()"/>
+			<item value="search"/>
+			<item value="searchtype()"/>
+			<item value="searchtype"/>
+			<item value="searchtyo"/>
+			<item value="contains"/>
+			<item value="goToUpdatePage()"/>
+			<item value="searchPerformed"/>
+			<item value="searchRecipient()"/>
+			<item value="TotalPages()"/>
+			<item value="resultList"/>
 			<item value="updateRecipient()"/>
-			<item value="prepareUpdate()"/>
-			<item value="RecipientController()"/>
-			<item value="RecipientController"/>
-			<item value="styleClassForPage"/>
-			<item value="styleClassForPage(int pageIndex)"/>
-			<item value="goTo"/>
-			<item value="getPageIndexes()"/>
-			<item value="getPage"/>
-			<item value="getPageNumber()"/>
-			<item value="getPageNumberMap()"/>
-			<item value="getPageNumberMap("/>
-			<item value="getPaginatedList"/>
-			<item value="getShow"/>
-			<item value="sortBy"/>
+			<item value="command"/>
 		</list>
 	</section>
 </section>

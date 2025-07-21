@@ -21,22 +21,54 @@ public class RecipientDaoImpl implements RecipientDao {
 	SessionFactory sf;
 	Session session;
 
-	@Override
-    public Recipient searchByHid(String hId) {
-        sf = SessionHelper.getSessionFactory();
-        session = sf.openSession();
-        Query query = session.getNamedQuery("searchByHid");
-        query.setParameter("hId", hId);
-        Recipient recipient = (Recipient)  query.uniqueResult();
-        
-        if (recipient == null) {
-            System.out.println("No recipient found for hId: " + hId);
-        }
-        
-        return recipient;
-        
-    }
+	
+	
 
+	@Override
+	public Recipient searchByHid(String hId) {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    
+	    try {
+	        Query query = session.getNamedQuery("searchByHid");
+	        query.setParameter("hId", hId);
+	        Recipient recipient = (Recipient) query.uniqueResult();
+	        
+	        if (recipient == null) {
+	            System.out.println("No recipient found for hId: " + hId);
+	        }
+	        
+	        return recipient;
+	    } finally {
+	        session.close();  //  -->>Always closing session to release resources
+	    }
+	}
+//	@Override
+//	public List<Recipient> searchByHid(String hId) {
+//	    sf = SessionHelper.getSessionFactory();
+//	    session = sf.openSession();
+//
+//	    try {
+//	        Query query = session.getNamedQuery("searchByHid");
+//	        query.setParameter("hId", hId);
+//	        
+//	        // Get list instead of single result
+//	        List<Recipient> recipientList = query.list();
+//	        
+//	        if (recipientList == null || recipientList.isEmpty()) {
+//	            System.out.println("No recipients found for hId: " + hId);
+//	        }
+//
+//	        return recipientList;
+//	    } finally {
+//	        session.close();  // Always release resources
+//	    }
+//	}
+
+
+
+	
+	
 	@Override
 	public List<Recipient> searchByFirstNameStartsWith(String firstName) {
 	    sf = SessionHelper.getSessionFactory();
@@ -50,6 +82,8 @@ public class RecipientDaoImpl implements RecipientDao {
 	    }
 	}
 
+	
+	
 	
 	@Override
 	public List<Recipient> searchByFirstNameContains(String firstName) {
@@ -68,115 +102,133 @@ public class RecipientDaoImpl implements RecipientDao {
 	
 
 
+//	@Override
+//	public List<Recipient> searchByMobile(String mobile) {
+//		
+//		sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//	    if (mobile == null || mobile.trim().isEmpty()) {
+//	        return new ArrayList<>();
+//	    }
+//
+//	    sf = SessionHelper.getSessionFactory();
+//	    session = sf.openSession();
+//	    Query query = session.getNamedQuery("searchByMobile");
+//	    query.setParameter("mobile", "%" + mobile + "%");
+//	    return query.list();
+//	}
 	@Override
 	public List<Recipient> searchByMobile(String mobile) {
-		
-		sf = SessionHelper.getSessionFactory();
-        session = sf.openSession();
 	    if (mobile == null || mobile.trim().isEmpty()) {
 	        return new ArrayList<>();
 	    }
 
 	    sf = SessionHelper.getSessionFactory();
 	    session = sf.openSession();
-	    Query query = session.getNamedQuery("searchByMobile");
-	    query.setParameter("mobile", "%" + mobile + "%");
-	    return query.list();
+
+	    try {
+	        Query query = session.getNamedQuery("searchByMobile");
+	        query.setParameter("mobile", "%" + mobile + "%");
+	        return query.list();
+	    } finally {
+	        session.close();  // ✅ always close the session
+	    }
+	}
+
+
+
+//    @Override
+//    public List<Recipient> searchByCreatedAt(String createdAt) {
+//    	sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//        Query query = session.getNamedQuery("searchByCreatedAt");
+//        query.setParameter("createdAt", "%" + createdAt + "%");
+//        return query.list();
+//    }
+	@Override
+	public List<Recipient> searchByCreatedAt(String createdAt) {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    try {
+	        Query query = session.getNamedQuery("searchByCreatedAt");
+	        query.setParameter("createdAt", "%" + createdAt + "%");
+	        return query.list();
+	    } finally {
+	        session.close();  // 
+	    }
+	}
+
+
+//    @Override
+//    public List<Recipient> showAllRecipients() {
+//    	sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//        Query query = session.getNamedQuery("showAllRecipients");
+//        List<Recipient> recipientList = query.list();
+//        return recipientList;
+////        return list != null ? list : new ArrayList<>(); 
+//        
+//    }
+	@Override
+	public List<Recipient> showAllRecipients() {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    try {
+	        Query query = session.getNamedQuery("showAllRecipients");
+	        List<Recipient> recipientList = query.list();
+	        return recipientList;
+	    } finally {
+	        session.close();  // ✅ Always close the session
+	    }
 	}
 
 
     @Override
-    public List<Recipient> searchByCreatedAt(String createdAt) {
-    	sf = SessionHelper.getSessionFactory();
-        session = sf.openSession();
-        Query query = session.getNamedQuery("searchByCreatedAt");
-        query.setParameter("createdAt", "%" + createdAt + "%");
-        return query.list();
-    }
-
-    @Override
-    public List<Recipient> showAllRecipients() {
-    	sf = SessionHelper.getSessionFactory();
-        session = sf.openSession();
-        Query query = session.getNamedQuery("showAllRecipients");
-        List<Recipient> recipientList = query.list();
-        return recipientList;
-//        return list != null ? list : new ArrayList<>(); 
-        
-    }
-
-    @Override
-    public String updateRecipient(Recipient recipient) {
-        FacesContext context = FacesContext.getCurrentInstance();
-        boolean isValid = true;
-
-        // Validate fields
-        if (recipient.getFirstName() == null || recipient.getFirstName().trim().length() < 2) {
-            context.addMessage("firstName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Invalid First Name", "First name must be at least 2 characters."));
-            isValid = false;
-        }
-
-        if (recipient.getMobile() == null || !recipient.getMobile().matches("\\d{10}")) {
-            context.addMessage("mobile", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Invalid Mobile", "Mobile number must be 10 digits."));
-            isValid = false;
-        }
-
-        if (!isValid) {
-            context.validationFailed();
-            return null;
-        }
-
-        //  Check if hId is null
-        if (recipient.gethId() == null || recipient.gethId().trim().isEmpty()) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Missing Health ID", "Cannot update recipient with missing ID."));
-            return null;
-        }
-
+    public boolean updateRecipient(Recipient recipient) {
         sf = SessionHelper.getSessionFactory();
         session = sf.openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction tx = session.beginTransaction();
 
         try {
-            // Load existing recipient from DB
             Recipient existing = (Recipient) session.get(Recipient.class, recipient.gethId());
 
-            if (existing == null) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Recipient not found", "No recipient exists with the given Health ID."));
-                return null;
-            }
+            if (existing == null) return false; // Not found
 
-            // Update fields
             existing.setFirstName(recipient.getFirstName());
             existing.setLastName(recipient.getLastName());
             existing.setMobile(recipient.getMobile());
             existing.setEmail(recipient.getEmail());
 
             session.update(existing);
-            transaction.commit();
+            tx.commit();
+            return true;
 
-            // Step 5: Confirmation Message
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Success", "Recipient details updated successfully."));
-
-            // (Optional) Put updated recipient in session
-            Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
-            sessionMap.put("updatedRecipient", existing);
-
-            return "UpdateRecipient1";  // reload same page to see result
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Update Failed", "An error occurred while updating the recipient."));
+            if (tx != null) tx.rollback();
             e.printStackTrace();
-            return null;
+            return false;
+
         } finally {
             session.close();
         }
-    
     }
+    
+   
+    
+    
+    @Override
+    public Recipient getRecipientByhId(String hId) {
+        sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+
+        try {
+            // Fetching by primary key
+            return (Recipient) session.get(Recipient.class, hId);  // Assuming hId is your PK
+        } finally {
+            session.close();
+        }
+    }
+
+
 	
 }

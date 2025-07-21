@@ -2,7 +2,14 @@
 <%@ taglib prefix="f" uri="http://java.sun.com/jsf/core" %>
 <%@ taglib prefix="h" uri="http://java.sun.com/jsf/html" %>
 
+
 <f:view>
+    <f:event type="preRenderView" listener="#{recipientController.loadRecipientForUpdate}" />
+    
+<html>
+<head>
+
+
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -138,40 +145,27 @@
     <div class="navbar">
         <h:form><h:commandLink value="Dashboard" action="dashboard1" /></h:form>
         <h:form><h:commandLink value="Search" action="SearchRecipient1" /></h:form>
-        <h:form><h:commandLink value="Show" action="ShowRecipient1" /></h:form>
+        <h:form><h:commandLink value="Show" action="#{recipientController.goToShowPage}"/></h:form>
         <h:form><h:commandLink value="Update" action="UpdateRecipient1" styleClass="active" /></h:form>
     </div>
-
-   
-    <!-- ✅ JS Alert for Global Message -->
-    <h:panelGroup rendered="#{not empty facesContext.messageList}">
-    <h:outputText escape="false" value="
-        <script>
-            alert('#{facesContext.messageList[0].summary}');
-        </script>
-    " />
-</h:panelGroup>
-
     
+   
      <!--Form Container -->
     <div class="form-container">
     
-        <h:form prependId="false">
+     <!--Show message if recipient is not selected -->
+        <h:outputText value=" Please select a recipient first from the search page." 
+                      rendered="#{empty recipientController.recipient}" 
+                      style="color: red; font-weight: bold;" />
+    
+        <h:form prependId="false" >
             <div class="form-title">Update Recipient Details</div>
             
             
-             <!--  FacesMessages Block for inline messages -->
-            <h:messages globalOnly="true" layout="table" style="color: green; font-weight: bold;" />
             
-           
-
             <div class="form-group">
                 <h:outputLabel for="hId" value="Health ID:" />
-    
-            <!-- ✅ Single readonly input with correct ID -->
                 <h:inputText id="hId" value="#{recipientController.recipient.hId}" />
-
-            <!-- ✅ This error message will now bind correctly -->
                 <h:message for="hId" styleClass="error-msg" />
             </div>
 
@@ -184,9 +178,9 @@
             <div class="form-group">
                 <h:outputLabel for="lastName" value="Last Name:" />
                 <h:inputText id="lastName" value="#{recipientController.recipient.lastName}" />
+                <h:message for="lastName" styleClass="error-msg" />
+                
             </div>
-
-
 
             <div class="form-group">
                 <h:outputLabel for="mobile" value="Mobile:" />
@@ -197,18 +191,87 @@
             <div class="form-group">
                 <h:outputLabel for="email" value="Email:" />
                 <h:inputText id="email" value="#{recipientController.recipient.email}" />
+                <h:message for="email" styleClass="error-msg" />
+                
             </div>
-
+            
             <!--Submit Button -->
             <h:commandButton value="Update Recipient" action="#{recipientController.updateRecipient}" styleClass="btn" />
+            <!-- Discard Changes Button -->
+            <h:commandButton value="Discard Changes" onclick="showModal(); return false;" styleClass="btn" />
 
-            <!--Links -->
+            
+            <!--Navigation Buttons -->
             <div class="link-group">
-                <h:commandLink value="Back to Search Page" action="SearchRecipient1" />
-                <h:commandLink value="Go to Recipient Dashboard" action="dashboard1" />
+                <h:commandButton value="Back to Search Page" action="SearchRecipient1" styleClass="btn" immediate="true" />
+                <h:commandButton value="Go to Recipient Dashboard" action="dashboard1" styleClass="btn" immediate="true" />
             </div>
+            
+            
+            <!-- Confirm Discard Modal -->
+<div id="confirmResetModal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+    <div style="background: white; padding: 20px; border-radius: 8px; width: 300px; text-align: center;">
+        <h3 style="margin-bottom: 16px;">Discard Changes?</h3>
+        <p>Are you sure you want to discard all unsaved changes?</p>
+        <div style="margin-top: 20px;">
+            <h:form>
+                <h:commandButton value="Yes, Discard" action="#{recipientController.resetUpdate}" styleClass="btn" />
+            </h:form>
+            <button class="btn" style="background-color: grey;" onclick="hideModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+     
+
+            
         </h:form>
     </div>
+   <script>
+  function showModal() {
+    document.getElementById("confirmResetModal").style.display = "flex";
+  }
+
+  function hideModal() {
+    document.getElementById("confirmResetModal").style.display = "none";
+  }
+</script>
+
+
+
+ <div id="toastMessage"
+     style="display:none; position: fixed; top: 20px; right: 20px;
+            background-color: #333; color: #fff; padding: 10px 20px;
+            border-radius: 6px; z-index: 9999;">
+    </div>
+
+<%-- Toast Box --%>
+<div id="toastMessage" style="display: none;
+     position: fixed; top: 20px; right: 20px;
+     background-color: #333; color: #fff;
+     padding: 10px 20px; border-radius: 6px;
+     z-index: 9999;"></div>
+
+<%-- Pure JSP Scriptlet to inject JavaScript if message exists --%>
+<%
+    java.util.List msgs = javax.faces.context.FacesContext.getCurrentInstance().getMessageList();
+    if (msgs != null && !msgs.isEmpty()) {
+        String message = ((javax.faces.application.FacesMessage) msgs.get(0)).getSummary();
+%>
+<script>
+  window.onload = function() {
+    const toast = document.getElementById("toastMessage");
+    toast.innerText = "<%= message.replace("\"", "\\\"") %>";
+    toast.style.display = "block";
+    setTimeout(() => {
+      toast.style.display = "none";
+    }, 4000);
+  }
+</script>
+<%
+    }
+%>
+
+
 
 </body>
 </html>

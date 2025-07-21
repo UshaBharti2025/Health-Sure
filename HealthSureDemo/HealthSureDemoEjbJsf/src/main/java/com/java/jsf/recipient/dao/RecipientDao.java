@@ -7,6 +7,7 @@ public interface RecipientDao {
 
     //----Search by health ID (exact match)----
     Recipient searchByHid(String hId);
+//    List<Recipient> searchByHid(String hId);
 
     // Search by mobile (LIKE %mobile%)
     List<Recipient> searchByMobile(String mobile);
@@ -18,7 +19,10 @@ public interface RecipientDao {
     List<Recipient> showAllRecipients();
 
     // Update recipient
-    String updateRecipient(Recipient recipient);
+    boolean updateRecipient(Recipient recipient);
+    
+    Recipient getRecipientByhId(String hId);
+
 
     /* ---------- NEW name‑based search methods ---------- */
 

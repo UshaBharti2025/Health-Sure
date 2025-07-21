@@ -167,8 +167,8 @@
     <div class="navbar">
         <h:form><h:commandLink value="Dashboard" action="dashboard1" /></h:form>
         <h:form><h:commandLink value="Search" action="SearchRecipient1" styleClass="active" /></h:form>
-        <h:form><h:commandLink value="Show" action="ShowRecipient1" /></h:form>
-        <h:form><h:commandLink value="Update" action="UpdateRecipient1" /></h:form>
+        <h:form><h:commandLink value="Show" action="#{recipientController.goToShowPage}"/></h:form>
+         <h:form><h:commandLink value="Update" action="UpdateRecipient1" /></h:form>
     </div>
 
     <!-- FULL PAGE WRAPPER -->
@@ -194,19 +194,28 @@
                     <h:inputText id="searchValue" value="#{recipientController.searchValue}" required="true" />
                     <h:message for="searchValue" styleClass="error-msg" />
                 </div>
+                   
 
                 <h:panelGroup rendered="#{recipientController.searchType eq 'firstName'}">
                     <div class="form-group">
                         <h:outputLabel value="First Name Search Mode:" />
                         <br/>
                         <h:selectOneRadio value="#{recipientController.nameSearchMode}">
-                            <f:selectItem itemValue="startsWith" itemLabel="Starts With" />
+<%--                             <f:selectItem itemLabel="Select Search Mode" itemValue="" />
+ --%>                            <f:selectItem itemValue="startsWith" itemLabel="Starts With" />
                             <f:selectItem itemValue="contains" itemLabel="Contains" />
                         </h:selectOneRadio>
                     </div>
                 </h:panelGroup>
 
-                <h:commandButton value="Search Recipient" action="#{recipientController.search}" styleClass="btn" />
+
+
+                <h:panelGroup layout="block" style="margin-top: 20px;">
+                <h:commandButton value="Search Recipient"
+                     action="#{recipientController.search}"
+                     styleClass="btn" />
+                </h:panelGroup>
+
             </h:form>
         </div>
 
@@ -218,7 +227,9 @@
 
                 <h:column>
                     <f:facet name="header"><h:outputText value="Health ID" /></f:facet>
-                    <h:outputText value="#{r.hId}" />
+                    <h:link value="#{r.hId}" outcome="updateRecipient">
+                        <f:param name="hid" value="#{r.hId}" />
+                    </h:link>                
                 </h:column>
                 <h:column>
                     <f:facet name="header"><h:outputText value="First Name" /></f:facet>
@@ -252,14 +263,29 @@
                     <f:facet name="header"><h:outputText value="Created At" /></f:facet>
                     <h:outputText value="#{r.createdAt}" />
                 </h:column>
+                
+                
             </h:dataTable>
-
+        
             <!-- No Result Message -->
-            <h:outputText value="No recipient found with the given value."
+            <h:panelGroup rendered="#{recipientController.searchPerformed and empty recipientController.resultList}">
+            <h:outputText value="No recipient found with the given value." styleClass="no-result" />
+            </h:panelGroup>
+            
+            <!-- ✅ REFRESH BUTTON (Bottom Form, Safe & Isolated) -->
+            <h:form>
+                <div class="center" style="margin-top: 30px;">
+                    <h:commandButton value="🔄 Refresh Page"
+                                     action="#{recipientController.resetSearch}"
+                                     styleClass="btn"
+                                     immediate="true" />
+                </div>
+            </h:form>
+           <%--  <h:outputText value="No recipient found with the given value."
                           rendered="#{empty recipientController.resultList}"
-                          styleClass="no-result" />
+                          styleClass="no-result" /> --%>
+                   
         </div>
-
     </div>
 
 </body>

@@ -135,7 +135,8 @@
             <h:commandLink value="Search" action="SearchRecipient1" />
         </h:form>
         <h:form style="display:inline;">
-            <h:commandLink value="Show" action="ShowRecipient1" styleClass="active" />
+            <h:commandLink value="Show" action="#{recipientController.goToShowPage}"
+ styleClass="active" />
         </h:form>
         <h:form style="display:inline;">
             <h:commandLink value="Update" action="UpdateRecipient1" />
@@ -220,7 +221,6 @@
                         <h:commandLink value="Update" action="#{recipientController.prepareUpdate()}">
                             <f:setPropertyActionListener target="#{recipientController.selectedRecipient}" value="#{rec}" />
                         </h:commandLink>
-
                 </h:column>
 
             </h:dataTable>
