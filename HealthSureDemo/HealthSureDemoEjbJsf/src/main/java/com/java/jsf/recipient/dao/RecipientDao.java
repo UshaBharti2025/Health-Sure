@@ -37,4 +37,9 @@ public interface RecipientDao {
      * (case insensitive, SQL LIKE '%text%').
      */
     List<Recipient> searchByFirstNameContains(String firstNameFragment);
+    
+    
+//   -----------for created at feature------------
+    List<Recipient> searchByCreatedAtRange(String startDate, String endDate);
+
 }

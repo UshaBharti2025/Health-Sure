@@ -215,7 +215,7 @@ public class RecipientDaoImpl implements RecipientDao {
     
    
     
-    
+//    for hyperlink to work
     @Override
     public Recipient getRecipientByhId(String hId) {
         sf = SessionHelper.getSessionFactory();
@@ -228,6 +228,43 @@ public class RecipientDaoImpl implements RecipientDao {
             session.close();
         }
     }
+    
+//    -----created at search field for date range----------
+//    @Override
+//    public List<Recipient> searchByCreatedAtRange(String startDate, String endDate) {
+//        sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//        try {
+//            Query query = session.createQuery("FROM Recipient r WHERE r.createdAt BETWEEN :startDate AND :endDate ORDER BY r.createdAt");
+//            query.setParameter("startDate", startDate);
+//            query.setParameter("endDate", endDate);
+//            return query.list();
+//        } finally {
+//            session.close();
+//        }
+//    }
+    public List<Recipient> searchByCreatedAtRange(String fromDate, String toDate) {
+        Session session = SessionHelper.getSessionFactory().openSession();
+        Transaction tx = null;
+        List<Recipient> list = new ArrayList<>();
+        try {
+            tx = session.beginTransaction();
+            Query query = session.createQuery("FROM Recipient WHERE createdAt BETWEEN :fromDate AND :toDate");
+            query.setParameter("fromDate", java.sql.Date.valueOf(fromDate));
+            query.setParameter("toDate", java.sql.Date.valueOf(toDate));
+            list = query.list();
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return list;
+    }
+
+
+
 
 
 	

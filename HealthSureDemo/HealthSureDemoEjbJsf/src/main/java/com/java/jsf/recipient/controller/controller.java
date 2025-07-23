@@ -711,3 +711,60 @@
 //</body>
 //</html>
 //</f:view>
+
+
+
+
+
+
+
+
+//<!-- <tr>
+//    <td>Created At (From):</td>
+//    <td>
+//        <h:inputText id="createdFrom" value="#{recipientController.createdAtFrom}" >
+//            <f:convertDateTime pattern="yyyy-MM-dd"/>
+//        </h:inputText>
+//    </td>
+//</tr>
+//<tr>
+//    <td>Created At (To):</td>
+//    <td>
+//        <h:inputText id="createdTo" value="#{recipientController.createdAtTo}" >
+//            <f:convertDateTime pattern="yyyy-MM-dd"/>
+//        </h:inputText>
+//    </td>
+//</tr>
+// -->
+// 
+// <%-- <h:panelGroup rendered="#{recipientController.searchType eq 'createdAt'}">
+//    <table>
+//        <tr>
+//            <td><h:outputLabel for="fromDate" value="Created From:" /></td>
+//            <td>
+//                <h:inputText id="fromDate" value="#{recipientController.searchCreatedAtStart}">
+//                    <f:convertDateTime pattern="yyyy-MM-dd" />
+//                </h:inputText>
+//                <!-- Optional calendar popup (if using PrimeFaces) -->
+//                <!-- <p:calendar id="fromDate" value="#{recipientController.searchCreatedAtStart}" pattern="yyyy-MM-dd" showButtonPanel="true" /> -->
+//            </td>
+//        </tr>
+//
+//        <tr>
+//            <td><h:outputLabel for="toDate" value="Created To:" /></td>
+//            <td>
+//                <h:inputText id="toDate" value="#{recipientController.searchCreatedAtEnd}">
+//                    <f:convertDateTime pattern="yyyy-MM-dd" />
+//                </h:inputText>
+//                <!-- Optional calendar popup (if using PrimeFaces) -->
+//                <!-- <p:calendar id="toDate" value="#{recipientController.searchCreatedAtEnd}" pattern="yyyy-MM-dd" showButtonPanel="true" /> -->
+//            </td>
+//        </tr>
+//    </table>
+//</h:panelGroup> --%>
+// 
+//
+//<%-- <p:calendar value="#{recipientController.searchCreatedAtStart}" pattern="yyyy-MM-dd" />
+// --%>
+//
+//

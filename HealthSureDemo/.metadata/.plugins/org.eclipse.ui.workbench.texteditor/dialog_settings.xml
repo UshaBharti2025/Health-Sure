@@ -4,6 +4,13 @@
 	<section name="java.lang.Class">
 		<item key="replaceBarOpen" value="false"/>
 		<list key="findhistory">
+			<item value="uppercase"/>
+			<item value="getReci"/>
+			<item value="getRe"/>
+			<item value="gotoupdate"/>
+			<item value="gotou"/>
+			<item value="searchHid"/>
+			<item value="load"/>
 			<item value=" getRecipie"/>
 			<item value=" getRecipientByHid"/>
 			<item value="search()"/>
@@ -12,13 +19,6 @@
 			<item value="searchtype"/>
 			<item value="searchtyo"/>
 			<item value="contains"/>
-			<item value="goToUpdatePage()"/>
-			<item value="searchPerformed"/>
-			<item value="searchRecipient()"/>
-			<item value="TotalPages()"/>
-			<item value="resultList"/>
-			<item value="updateRecipient()"/>
-			<item value="command"/>
 		</list>
 	</section>
 </section>

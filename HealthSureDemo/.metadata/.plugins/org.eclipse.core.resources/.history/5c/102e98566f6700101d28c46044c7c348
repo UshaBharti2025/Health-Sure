@@ -1,0 +1,236 @@
+package com.java.jsf.recipient.dao;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+import com.java.jsf.recipient.model.Recipient;
+import com.java.jsf.recipient.util.SessionHelper;
+
+public class RecipientDaoImpl implements RecipientDao {
+	
+	SessionFactory sf;
+	Session session;
+
+	
+	
+
+	@Override
+	public Recipient searchByHid(String hId) {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    
+	    try {
+	        Query query = session.getNamedQuery("searchByHid");
+	        query.setParameter("hId", hId);
+	        Recipient recipient = (Recipient) query.uniqueResult();
+	        
+	        if (recipient == null) {
+	            System.out.println("No recipient found for hId: " + hId);
+	        }
+	        
+	        return recipient;
+	    } finally {
+	        session.close();  //  -->>Always closing session to release resources
+	    }
+	}
+//	@Override
+//	public List<Recipient> searchByHid(String hId) {
+//	    sf = SessionHelper.getSessionFactory();
+//	    session = sf.openSession();
+//
+//	    try {
+//	        Query query = session.getNamedQuery("searchByHid");
+//	        query.setParameter("hId", hId);
+//	        
+//	        // Get list instead of single result
+//	        List<Recipient> recipientList = query.list();
+//	        
+//	        if (recipientList == null || recipientList.isEmpty()) {
+//	            System.out.println("No recipients found for hId: " + hId);
+//	        }
+//
+//	        return recipientList;
+//	    } finally {
+//	        session.close();  // Always release resources
+//	    }
+//	}
+
+
+
+	
+	
+	@Override
+	public List<Recipient> searchByFirstNameStartsWith(String firstName) {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    try {
+	        Query query = session.createQuery("from Recipient where lower(firstName) like :name");
+	        query.setParameter("name", firstName.toLowerCase() + "%");
+	        return query.list();
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	
+	
+	
+	@Override
+	public List<Recipient> searchByFirstNameContains(String firstName) {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    try {
+	        Query query = session.createQuery("from Recipient where lower(firstName) like :name");
+	        query.setParameter("name", "%" + firstName.toLowerCase() + "%");
+	        return query.list();
+	    } finally {
+	        session.close();
+	    }
+	}
+
+	
+	
+
+
+//	@Override
+//	public List<Recipient> searchByMobile(String mobile) {
+//		
+//		sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//	    if (mobile == null || mobile.trim().isEmpty()) {
+//	        return new ArrayList<>();
+//	    }
+//
+//	    sf = SessionHelper.getSessionFactory();
+//	    session = sf.openSession();
+//	    Query query = session.getNamedQuery("searchByMobile");
+//	    query.setParameter("mobile", "%" + mobile + "%");
+//	    return query.list();
+//	}
+	@Override
+	public List<Recipient> searchByMobile(String mobile) {
+	    if (mobile == null || mobile.trim().isEmpty()) {
+	        return new ArrayList<>();
+	    }
+
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+
+	    try {
+	        Query query = session.getNamedQuery("searchByMobile");
+	        query.setParameter("mobile", "%" + mobile + "%");
+	        return query.list();
+	    } finally {
+	        session.close();  // ✅ always close the session
+	    }
+	}
+
+
+
+//    @Override
+//    public List<Recipient> searchByCreatedAt(String createdAt) {
+//    	sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//        Query query = session.getNamedQuery("searchByCreatedAt");
+//        query.setParameter("createdAt", "%" + createdAt + "%");
+//        return query.list();
+//    }
+	@Override
+	public List<Recipient> searchByCreatedAt(String createdAt) {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    try {
+	        Query query = session.getNamedQuery("searchByCreatedAt");
+	        query.setParameter("createdAt", "%" + createdAt + "%");
+	        return query.list();
+	    } finally {
+	        session.close();  // 
+	    }
+	}
+
+
+//    @Override
+//    public List<Recipient> showAllRecipients() {
+//    	sf = SessionHelper.getSessionFactory();
+//        session = sf.openSession();
+//        Query query = session.getNamedQuery("showAllRecipients");
+//        List<Recipient> recipientList = query.list();
+//        return recipientList;
+////        return list != null ? list : new ArrayList<>(); 
+//        
+//    }
+	@Override
+	public List<Recipient> showAllRecipients() {
+	    sf = SessionHelper.getSessionFactory();
+	    session = sf.openSession();
+	    try {
+	        Query query = session.getNamedQuery("showAllRecipients");
+	        List<Recipient> recipientList = query.list();
+	        return recipientList;
+	    } finally {
+	        session.close();  // ✅ Always close the session
+	    }
+	}
+
+
+    @Override
+    public boolean updateRecipient(Recipient recipient) {
+        sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+        Transaction tx = session.beginTransaction();
+
+        try {
+            Recipient existing = (Recipient) session.get(Recipient.class, recipient.gethId());
+
+            if (existing == null) return false; // Not found
+
+            existing.setFirstName(recipient.getFirstName());
+            existing.setLastName(recipient.getLastName());
+            existing.setMobile(recipient.getMobile());
+            existing.setEmail(recipient.getEmail());
+
+            session.update(existing);
+            tx.commit();
+            return true;
+
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+            return false;
+
+        } finally {
+            session.close();
+        }
+    }
+    
+   
+    
+//    for hyperlink to work
+    @Override
+    public Recipient getRecipientByhId(String hId) {
+        sf = SessionHelper.getSessionFactory();
+        session = sf.openSession();
+
+        try {
+            // Fetching by primary key
+            return (Recipient) session.get(Recipient.class, hId);  // Assuming hId is your PK
+        } finally {
+            session.close();
+        }
+    }
+    
+//    -----created at 
+
+
+	
+}

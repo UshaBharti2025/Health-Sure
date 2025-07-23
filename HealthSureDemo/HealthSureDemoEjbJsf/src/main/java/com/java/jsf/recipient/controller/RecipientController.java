@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -16,6 +17,8 @@ import com.java.jsf.recipient.model.Recipient;
 public class RecipientController {
 	
 
+	
+	
     private RecipientDao recipientDao;
     private Recipient recipient;
 
@@ -78,9 +81,9 @@ public class RecipientController {
         this.recipientDao = recipientDao;
     }
 
-    public Recipient getRecipient() {
-        return recipient;
-    }
+//    public Recipient getRecipient() {
+//        return recipient;
+//    }
 
     public void setRecipient(Recipient recipient) {
         this.recipient = recipient;
@@ -203,6 +206,11 @@ public class RecipientController {
     
     
     
+    
+    
+    
+    
+    
     /** List of page indexes (0‑based) that the JSP will iterate over. */
     public List<Integer> getPageIndexes() {
         int pages = getTotalPages();
@@ -216,6 +224,12 @@ public class RecipientController {
 //        this.currentPage = pageIndex;
         return null;                  // stay on same view
     }
+    
+    
+    
+    
+    
+    
  // --- (OPTIONAL) helper for the CSS class -----------
     public String styleClassForPage(int pageIndex) {
         return (currentPage == pageIndex) ? "active-page" : "page-link";
@@ -240,26 +254,7 @@ public class RecipientController {
         return String.valueOf(pageIndex + 1);
     }
     
-   
-    
-   
-//    ----to ensure that pagination doesnt returns to the empty list----  
-//    public List<Recipient> getPaginatedList() {
-//        if (recipientList == null) return null;
-//
-//        int start = currentPage * pageSize;
-//        int end = Math.min(start + pageSize, recipientList.size());
-//
-//        System.out.println("Page: " + currentPage + ", Start: " + start + ", End: " + end + ", Size: " + recipientList.size());
-//
-//        if (start >= end) {
-//            currentPage = 0;
-//            start = 0;
-//            end = Math.min(pageSize, recipientList.size());
-//        }
-//
-//        return recipientList.subList(start, end);
-//    }
+ 
 
     //----to reset show recipient list view data and sorting----
     public String refreshRecipientList() {
@@ -271,7 +266,7 @@ public class RecipientController {
     }
 
 
-    // ----Sorting----- 
+    // -----------SORTING---------------- 
     public String sortBy(String column) {
         if (column.equals(this.sortColumn)) {
             this.sortAscending = !this.sortAscending;
@@ -322,7 +317,11 @@ public class RecipientController {
         });
     }
 
-    // ----Pagination Methods-----
+    
+    
+    
+    
+    // -----------Pagination Methods---------------
     private List<Recipient> getPaginatedList() {
 
         if (recipientList == null || recipientList.isEmpty()) return Collections.emptyList();
@@ -330,7 +329,7 @@ public class RecipientController {
         int start = currentPage * pageSize;
         int end   = Math.min(start + pageSize, recipientList.size());
 
-        // protect against out‑of‑range index (e.g. list shrank):
+        // protect against out of range index (e.g. list shrank):
         if (start >= recipientList.size()) {
             currentPage = 0;
             start = 0;
@@ -353,60 +352,341 @@ public class RecipientController {
     public String previousPage()  { if (!isPreviousButtonDisabled()) currentPage--; return null; }
 
     private void resetPagination() { currentPage = 0; }
+    
+    public String getPageNumberDisplay() {
+        int total = getTotalPages();
+        if (total == 0) total = 1;
+        return "Page " + (currentPage + 1) + " of " + total;
+    }
 
 
 
 
     
-    // Combined Dispatcher for dropdown
+//     Combined Dispatcher for dropdown
+    
+//    public String search() {
+//    	  // Reset results first
+//        recipient = null;
+//        recipientList = null;
+//
+//        if (searchType == null || searchValue == null || searchValue.trim().isEmpty()) {
+//            recipientList = new ArrayList<>();
+//            searchPerformed = false;  // Important
+//            return "SearchRecipient1";
+//        }
+//        this.searchPerformed = true; //  Only set true when search is valid and performed
+//
+//        switch (searchType) {
+//            case "hid":
+//                searchHid = searchValue;
+//                searchByHid(); // recipient will be set
+//                recipientList = null; // clear any list
+//                break;
+//            case "firstName":
+//                searchFirstName = searchValue;
+//                searchByFirstName(); // recipientList will be set
+//                recipient = null;
+//                break;
+//            case "mobile":
+//                searchMobile = searchValue;
+//                searchByMobile();
+//                recipient = null;
+//                break;
+//            case "createdAt":
+//                searchCreatedAt = searchValue;
+//                searchByCreatedAt();
+//                recipient = null;
+//                break;
+//            default:
+//                recipient = null;
+//                recipientList = new ArrayList<>();
+//        }
+//        return "SearchRecipient1";
+//    }
+    
+//    ===========new fields for created at 0r date range=============
+    
+    
+    private String fromDate;
+    private String toDate;
+
+    public String getFromDate() {
+        return fromDate;
+    }
+
+    public void setFromDate(String fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public String getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(String toDate) {
+        this.toDate = toDate;
+    }
+
+    
+    
+    
+    private String searchCreatedAtStart;
+    private String searchCreatedAtEnd;
+
+    
+    
+    public String getSearchCreatedAtStart() {
+		return searchCreatedAtStart;
+	}
+
+	public void setSearchCreatedAtStart(String searchCreatedAtStart) {
+		this.searchCreatedAtStart = searchCreatedAtStart;
+	}
+	
+	public String getSearchCreatedAtEnd() {
+		return searchCreatedAtEnd;
+	}
+	
+	public void setSearchCreatedAtEnd(String searchCreatedAtEnd) {
+		this.searchCreatedAtEnd = searchCreatedAtEnd;
+	}
+
+	
+	public void searchByCreatedAtRange() {
+	    FacesContext context = FacesContext.getCurrentInstance();
+
+	    if (fromDate != null && toDate != null && !fromDate.isEmpty() && !toDate.isEmpty()) {
+	        recipientList = recipientDao.searchByCreatedAtRange(fromDate, toDate);
+	        sortResults();
+	        resetPagination();
+	    } else {
+	        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Please provide both From and To dates.", null));
+	        searchPerformed = false;
+	    }
+	}
+//	public void searchByCreatedAtRange() {
+//	    if (searchCreatedAtStart != null && searchCreatedAtEnd != null &&
+//	        !searchCreatedAtStart.isEmpty() && !searchCreatedAtEnd.isEmpty()) {
+//
+//	        recipientList = recipientDao.searchByCreatedAtRange(searchCreatedAtStart, searchCreatedAtEnd);
+//	        sortResults();
+//	        resetPagination();
+//	    } else {
+//	        FacesContext context = FacesContext.getCurrentInstance();
+//	        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+//	                "Please select both From and To dates.", null));
+//	    }
+//	}
+
+
+	
+	
+	
+
+//  ========================link===========================
+
+
+	private boolean recipientLoaded = false;
+
+    public Recipient getRecipient() {
+        if (!recipientLoaded) {
+            loadRecipientForUpdate();
+            recipientLoaded = true;
+        }
+        return this.recipient;
+    }
+
+//------------SEARCH METHOD WITH VALIDATIONS----------
     public String search() {
-    	  // Reset results first
+        // Reset previous results
         recipient = null;
         recipientList = null;
 
-        if (searchType == null || searchValue == null || searchValue.trim().isEmpty()) {
-            recipientList = new ArrayList<>();
-            searchPerformed = false;  // <- Important
-            return "SearchRecipient1";
-        }
-        
-        this.searchPerformed = true; //  Only set true when search is valid and performed
+        FacesContext context = FacesContext.getCurrentInstance();
 
+        // Common validation
+        if (searchType == null || searchType.trim().isEmpty()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                "Please select a search type.", null));
+            searchPerformed = false;
+            return null;
+//            return "SearchRecipient1";
+        }
+
+        if (searchValue == null || searchValue.trim().isEmpty()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                "Please enter a value for search.", null));
+            searchPerformed = false;
+            return null;
+
+//            return "SearchRecipient1";
+        }
+
+        this.searchPerformed = true;
 
         switch (searchType) {
             case "hid":
-                searchHid = searchValue;
-                searchByHid(); // recipient will be set
-                recipientList = null; // clear any list
+                // Normalize to uppercase and trim spaces
+                searchHid = searchValue.trim().toUpperCase();
+
+                // Match HID followed by 3 digits only
+                if (!searchHid.matches("HID\\d{3}")) {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Invalid Health ID. Health ID must be in format HID001", null));
+                    recipient = null;
+                    searchPerformed = false;
+                    return null; //Stay on same page — error message visible
+                    // return "searchRecipient1";Page reloads — message lost
+                }
+
+                searchByHid();  // this method will use searchHid
+                recipientList = null;
                 break;
+
             case "firstName":
+                if (!searchValue.matches("[a-zA-Z]+")) {
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "First name should contain only alphabets.", null));
+                    searchPerformed = false;
+                    return null;
+//                  return "SearchRecipient1";            
+                    }
                 searchFirstName = searchValue;
-                searchByFirstName(); // recipientList will be set
+                searchByFirstName();
                 recipient = null;
                 break;
+
             case "mobile":
+                if (!searchValue.matches("^[1-9][0-9]{9}$")) {
+                    context.addMessage(null, new FacesMessage(
+                        FacesMessage.SEVERITY_ERROR,
+                        "Mobile number must be exactly 10 digits, cannot start with 0, and must not contain letters.",
+                        null));
+                    searchPerformed = false;
+                    return null;
+                }
                 searchMobile = searchValue;
                 searchByMobile();
                 recipient = null;
                 break;
+               
+                
+                
+                
             case "createdAt":
-                searchCreatedAt = searchValue;
-                searchByCreatedAt();
+                if ((fromDate == null || fromDate.isEmpty()) || 
+                    (toDate == null || toDate.isEmpty())) {
+
+                    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Both From and To dates are required.", null));
+                    searchPerformed = false;
+                    return null;
+                }
+
+                searchByCreatedAtRange(); // ✅ Call to your method above
                 recipient = null;
                 break;
+
+
+
             default:
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Unknown search type.", null));
                 recipient = null;
                 recipientList = new ArrayList<>();
+                searchPerformed = false;
+                return null;
+//              return "SearchRecipient1";
         }
+
         return "SearchRecipient1";
     }
-   
+
+
     
-    //Search Methods (reuse list for pagination)
+    
+    
+  
+
+
+//    public void loadRecipientForUpdate() {
+//        if (hid != null && !hid.isEmpty()) {
+//            this.recipient = recipientDao.getRecipientByhId(hid);
+//            System.out.println("Loaded recipient for update: " + recipient.getFirstName());
+//        } else {
+//            System.out.println("No hid found in request.");
+//        }
+//    }
+
+//    public void searchByHid() {
+//        Recipient result = recipientDao.searchByHid(searchHid);
+//        
+//        if (result != null) {
+//            recipientList = new ArrayList<>();
+//            recipientList.add(result);
+//        } else {
+//            recipientList = new ArrayList<>(); // empty list to avoid null
+//        }
+//
+//        sortResults();
+//        resetPagination();
+//    }
+
+    
+    
+    
+//----------Search Methods (reuse list for pagination)--------------
     public void searchByHid() {
         recipient = recipientDao.searchByHid(searchHid);
     }
+    public String selectRecipientForUpdate(Recipient selectedRecipient) {
+        this.recipient = selectedRecipient;
+        return "updateRecipient1.jsp"; //actual page name without .xhtml in nav-rule
+    }
 
+//    public void searchByHid() {
+//        System.out.println("Inside searchByHid() method");
+//
+//        Recipient result = recipientDao.searchByHid(searchHid);
+//
+//        if (result != null) {
+//            recipientList = new ArrayList<>();
+//            recipientList.add(result);
+//            System.out.println("Recipient found: " + result.getFirstName());
+//        } else {
+//            recipientList = new ArrayList<>();
+//            System.out.println("No recipient found.");
+//        }
+//
+//        sortResults();
+//        resetPagination();
+//    }
+
+    
+    
+//    ==============    2    ============
+//    public void searchByHid() {
+//        Recipient result = recipientDao.searchByHid(searchHid);
+//        
+//        if (result != null) {
+//            recipientList = new ArrayList<>();
+//            recipientList.add(result);
+//        } else {
+//            recipientList = new ArrayList<>(); // empty list to avoid null
+//        }
+//
+//        sortResults();
+//        resetPagination();
+//    }
+
+    
+    
+
+    
+    
+    
+    
     public void searchByFirstName() {
     	
     	 if (searchFirstName == null || searchFirstName.trim().isEmpty()) {
@@ -425,12 +705,14 @@ public class RecipientController {
         resetPagination();
     }
     
+    
     public void searchByMobile() {
         recipientList = recipientDao.searchByMobile(searchMobile);
         sortResults();
         resetPagination();
     }
-
+    
+    
     public void searchByCreatedAt() {
         recipientList = recipientDao.searchByCreatedAt(searchCreatedAt);
         sortResults();
@@ -449,29 +731,114 @@ public class RecipientController {
     }
     
     
-//======method to refer to the hyperlink=======
-    public void loadRecipientForUpdate() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        String hidParam = context.getExternalContext().getRequestParameterMap().get("hid");
+    
+//    public void loadRecipientForUpdate() {
+//        try {
+//            FacesContext context = FacesContext.getCurrentInstance();
+//            Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+//            String hidParam = params.get("hid");
+//
+//            if (hidParam != null && !hidParam.isEmpty()) {
+//                this.recipient = recipientDao.getRecipientByhId(hidParam);
+//
+//                if (this.recipient != null) {
+//                    // Set recipient details to form fields
+//                    this.searchHid = recipient.gethId();
+//                    this.searchFirstName = recipient.getFirstName();
+//                    this.searchMobile = recipient.getMobile();
+////                    this.searchCreatedAt = recipient.getCreatedAt();
+//                    System.out.println("Recipient loaded successfully.");
+//                } else {
+//                    System.out.println("No recipient found for given hId.");
+//                }
+//            } else {
+//                System.out.println("hid parameter is missing.");
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+//    private boolean recipientLoaded = false;
 
-        if (hidParam != null && !hidParam.isEmpty()) {
-            try {
-                this.recipient = recipientDao.getRecipientByHid(hidParam);
-            } catch (Exception e) {
-                e.printStackTrace();
+    public void loadRecipientForUpdate() {
+        if (recipientLoaded) {
+            return; // prevent unnecessary reload
+        }
+
+        try {
+            FacesContext context = FacesContext.getCurrentInstance();
+            Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+            String hidParam = params.get("hid");
+
+            if (hidParam != null && !hidParam.trim().isEmpty()) {
+                this.recipient = recipientDao.getRecipientByhId(hidParam);
+
+                if (this.recipient != null) {
+                    // Optional: Set form fields if needed
+                    this.searchHid = recipient.gethId();
+                    this.searchFirstName = recipient.getFirstName();
+                    this.searchMobile = recipient.getMobile();
+//                  this.searchCreatedAt = recipient.getCreatedAt(); // Uncomment if needed
+
+                    System.out.println("Recipient loaded successfully for update.");
+                    recipientLoaded = true;
+                } else {
+                    System.out.println("No recipient found for given hId.");
+                }
+            } else {
+                System.out.println("hid parameter is missing in URL.");
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
+
+
+
+
+//======method to refer to the HYPERLINK=======
+//    public void loadRecipientForUpdate() {
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+//        String hId = params.get("hid");  //
+//
+//        if (hId != null && !hId.isEmpty()) {
+//            this.recipient = recipientDao.getRecipientByhId(hId);
+//            System.out.println("Loaded recipient for update: " + recipient.getFirstName());
+//        } else {
+//            System.out.println("No hid found in request.");
+//        }
+//    }
     
+//    ================    1   =================
+//    public void loadRecipientForUpdate() {
+//        FacesContext context = FacesContext.getCurrentInstance();
+//        Map<String, String> params = context.getExternalContext().getRequestParameterMap();
+//        String hIdParam = params.get("hid");  // From hyperlink
+//
+//        // Use request parameter first, if available
+//        if (hIdParam != null && !hIdParam.isEmpty()) {
+//            this.recipient = recipientDao.getRecipientByhId(hIdParam);
+//            System.out.println("Loaded recipient for update using param: " + recipient.getFirstName());
+//        }
+//        // Else fallback to the controller's hid field (if you're setting it somewhere)
+//        else if (hId != null && !hId.isEmpty()) {
+//            this.recipient = recipientDao.getRecipientByhId(hId);
+//            System.out.println("Loaded recipient for update using controller hid: " + recipient.getFirstName());
+//        } else {
+//            System.out.println("No hid found in request or controller.");
+//        }
+//    }
+//
+
     
-    
- 
-    
-    
+  
     
 
-    //----Update method WIHT VALIDATIONS----    
+    //--------Update method WIHT VALIDATIONS---------    
     private boolean validateRecipient(Recipient r, FacesContext context) {
         boolean isValid = true;
 
@@ -513,8 +880,7 @@ public class RecipientController {
         }
 
         
-        // -------- Email (optional, but validate format if entered) --------
-     // -------- Email --------
+     // -------- EMAIL --------
         String email = r.getEmail();
         if (email == null || email.trim().isEmpty()) {
             context.addMessage("email", new FacesMessage(FacesMessage.SEVERITY_ERROR,
@@ -525,17 +891,15 @@ public class RecipientController {
                 "Invalid email format. Example: username@example.com. Use only letters, numbers, and '.', '_', '%', '+', '-' before '@'.", null));
             isValid = false;
         }
-
-
-
-
-        
-
         return isValid;
     }
     
     
-//    update method
+    
+    
+    
+    
+//----------UPDATE METHOD------------
     public String updateRecipient() {
         FacesContext context = FacesContext.getCurrentInstance();
 
@@ -568,12 +932,14 @@ public class RecipientController {
     public String goToUpdatePage() {
         if (recipient == null || recipient.gethId() == null) {
             FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage("❌ Please search and select a recipient first."));
+                new FacesMessage("Please search and select a recipient first."));
             return "SearchRecipient?faces-redirect=true";
         }
         return "UpdateRecipient1?faces-redirect=true";
     }
     
+    
+//--------DISCARD METHOD for update page-----------
     public void resetUpdate() {
         if (this.recipient != null && this.recipient.gethId() != null) {
             this.recipient = recipientDao.getRecipientByhId(this.recipient.gethId());
@@ -582,8 +948,7 @@ public class RecipientController {
         }
     }
 
-
-
+    
     
     
     private boolean searchPerformed = false; // initially false
@@ -597,12 +962,13 @@ public class RecipientController {
     }
 
     
+    
+    //-------reset page-------- 
     public String resetSearch() {
         this.searchType = null;
         this.searchValue = null;
         this.nameSearchMode = null;
-
-//        this.recipient = null;
+        
         this.recipientList = null;
         this.resultList = null;
         this.paginatedSearchList = null;
@@ -613,18 +979,12 @@ public class RecipientController {
         this.sortColumn = null;
         this.sortAscending = true;
         
-        this.searchPerformed = false; // ✅ Important: stops "No Recipient Found" from showing on reset
+        this.searchPerformed = false; // Important: stops "No Recipient Found" from showing on reset
 
-
-        return "SearchRecipient1?faces-redirect=true";  // ✅ Full page reload
+        return "SearchRecipient1?faces-redirect=true";  // Full page reload
     }
 
 }
-
-
-
-
-
 
 
 
