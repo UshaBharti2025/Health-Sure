@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="hasShownOverlayPopupBefore" value="true"/>
+	<section name="java.lang.Class">
+		<item key="replaceBarOpen" value="false"/>
+		<list key="findhistory">
+			<item value="confirm"/>
+			<item value="load"/>
+			<item value="sort"/>
+			<item value="resetU"/>
+			<item value="pre"/>
+			<item value="updateRecipient()"/>
+			<item value="pagination"/>
+			<item value="pagi"/>
+			<item value=" selectedRecipient"/>
+			<item value="hyperlink 1"/>
+			<item value="hyperlink "/>
+			<item value="discard"/>
+			<item value="toastMessage"/>
+			<item value="prepare"/>
+			<item value="ink"/>
+		</list>
+	</section>
+</section>

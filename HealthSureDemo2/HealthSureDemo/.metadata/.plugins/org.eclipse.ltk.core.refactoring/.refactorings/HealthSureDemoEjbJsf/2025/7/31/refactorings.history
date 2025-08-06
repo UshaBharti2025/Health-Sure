@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;HealthSureDemoEjbJsf/src/main/webapp/Navbar.jsp&apos; to &apos;Footer.jsp&apos;" description="Rename resource &apos;Navbar.jsp&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/Navbar.jsp" name="Footer.jsp" stamp="1753767059765" updateReferences="true"/>
+</session>

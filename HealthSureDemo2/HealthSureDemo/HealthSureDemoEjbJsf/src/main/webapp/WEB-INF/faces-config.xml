@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee /WEB-INF/schema/web-facesconfig_2_0.xsd"
+	version="2.0" metadata-complete="false">
+	<!-- RecipientDao Bean -->
+<managed-bean>
+    <managed-bean-name>recipientDao</managed-bean-name>
+    <managed-bean-class>com.java.jsf.recipient.dao.RecipientDaoImpl</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+<!-- Recipient Model Bean -->
+<managed-bean>
+    <managed-bean-name>recipient</managed-bean-name>
+    <managed-bean-class>com.java.jsf.recipient.model.Recipient</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+<managed-bean>
+    <managed-bean-name>recipientController</managed-bean-name>
+    <managed-bean-class>com.java.jsf.recipient.controller.RecipientController</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+
+
+    <managed-property>
+        <property-name>recipientDao</property-name>
+        <property-class>com.java.jsf.recipient.dao.RecipientDao</property-class>
+        <value>#{recipientDao}</value>
+    </managed-property>
+
+    <managed-property>
+        <property-name>recipient</property-name>
+        <property-class>com.java.jsf.recipient.model.Recipient</property-class>
+        <value>#{recipient}</value>
+    </managed-property>
+</managed-bean>
+
+
+
+<!-- Optional: To hold searched recipient -->
+<managed-bean>
+    <managed-bean-name>recipientFound</managed-bean-name>
+    <managed-bean-class>com.java.jsf.recipient.model.Recipient</managed-bean-class>
+    <managed-bean-scope>session</managed-bean-scope>
+</managed-bean>
+
+</faces-config>
